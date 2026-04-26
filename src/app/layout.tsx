@@ -6,10 +6,10 @@ import { PwaRegistration } from "./PwaRegistration";
 import { FCMInitializer } from "./FCMInitializer";
 
 export const metadata: Metadata = {
-  title: "Almas ukelønn",
-  description: "Ukentlige oppgaver, bonusoppgaver og sparemål for Alma",
+  title: "Ukelonn Familie",
+  description: "Ukentlige oppgaver, bonusoppgaver og sparemal for barn og foreldre",
   manifest: "/ukelonn/manifest.webmanifest",
-  applicationName: "Almas ukelønn",
+  applicationName: "Ukelonn Familie",
   icons: {
     icon: [
       { url: `${APP_BASE_PATH}/icon-192.png`, sizes: "192x192", type: "image/png" },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Almas ukelønn",
+    title: "Ukelonn Familie",
   },
   // apple-mobile-web-app-capable must be set explicitly — Next.js 16 does not
   // generate it from appleWebApp.capable. Without this tag iOS may not launch

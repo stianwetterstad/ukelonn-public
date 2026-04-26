@@ -63,12 +63,16 @@ export default function ParentPage() {
     totalEarned,
     balance,
     savingsGoal,
+    childName,
+    childTheme,
     childPinConfigured,
     setApproval,
     approveAllPending,
     setBaseAllowance,
     setBalance,
     setSavingsGoal,
+    setChildName,
+    setChildTheme,
     setChildPin,
     clearChildPin,
     addTask,
@@ -86,7 +90,14 @@ export default function ParentPage() {
 
   // ── Balance / savings state ──
   const [balanceInput, setBalanceInput] = useState("");
+  const [childNameInput, setChildNameInput] = useState(childName);
   const goals = useMemo(() => parseSavingsGoal(savingsGoal), [savingsGoal]);
+  const isBoyTheme = childTheme === "boy";
+  const displayChildName = childName.trim() || "Barnet";
+
+  useEffect(() => {
+    setChildNameInput(childName);
+  }, [childName]);
 
   function updateGoal(index: number, field: "name" | "price", value: string) {
     const nextGoals = goals.map((g, i) =>
@@ -296,9 +307,9 @@ export default function ParentPage() {
 
   if (!user) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-pink-50 px-4">
+      <main className={`flex min-h-screen items-center justify-center px-4 ${isBoyTheme ? "bg-blue-50" : "bg-pink-50"}`}>
         <form onSubmit={handleLogin} className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
-          <h1 className="mb-4 text-center text-xl font-bold text-pink-700">Forelder-innlogging 🔐</h1>
+          <h1 className={`mb-4 text-center text-xl font-bold ${isBoyTheme ? "text-blue-700" : "text-pink-700"}`}>Forelder-innlogging 🔐</h1>
           {authError && (
             <p role="alert" className="mb-3 rounded-lg bg-red-100 px-3 py-2 text-sm text-red-700">{authError}</p>
           )}
@@ -309,7 +320,7 @@ export default function ParentPage() {
             placeholder="forelder@example.com"
             value={loginEmail}
             onChange={(e) => setLoginEmail(e.target.value)}
-            className="mb-4 mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`mb-4 mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
             required
             autoComplete="email"
           />
@@ -320,21 +331,21 @@ export default function ParentPage() {
             placeholder="••••••••"
             value={loginPassword}
             onChange={(e) => setLoginPassword(e.target.value)}
-            className="mb-5 mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`mb-5 mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
             required
             autoComplete="current-password"
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-pink-500 py-2.5 text-sm font-bold text-white active:bg-pink-600"
+            className={`w-full rounded-lg py-2.5 text-sm font-bold text-white ${isBoyTheme ? "bg-blue-500 active:bg-blue-600" : "bg-pink-500 active:bg-pink-600"}`}
           >
             Logg inn
           </button>
           <a
-            href="https://alma.rocks"
+            href="/"
             className="mt-4 block text-center text-xs text-gray-400 hover:text-gray-600"
           >
-            ← Tilbake til Alma
+            ← Til startsiden
           </a>
         </form>
       </main>
@@ -344,17 +355,17 @@ export default function ParentPage() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col pb-10">
+    <main className={`mx-auto flex min-h-screen w-full max-w-2xl flex-col pb-10 ${isBoyTheme ? "bg-blue-50" : ""}`}>
       {/* ── Header ── */}
-      <header className="relative bg-pink-400 px-4 py-3 text-center">
+      <header className={`relative px-4 py-3 text-center ${isBoyTheme ? "bg-blue-500" : "bg-pink-400"}`}>
         <a
-          href="https://alma.rocks"
+          href="/"
           className="absolute left-3 top-3 flex items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white hover:bg-white/30"
         >
-          ← Alma
+          ← Start
         </a>
         <h1 className="text-xl font-extrabold uppercase tracking-wide text-white md:text-2xl">
-          Forelder‑dashboard 👩‍👧
+          Forelder‑dashboard for {displayChildName}
         </h1>
         <p className="mt-0.5 text-sm text-pink-100">Godkjenn oppgaver og se progresjon</p>
         <button
@@ -378,7 +389,7 @@ export default function ParentPage() {
                 setAdminLoading(true);
                 try { await seedInitialTasks(); } finally { setAdminLoading(false); }
               }}
-              className="flex-1 rounded-lg bg-pink-600 py-2.5 text-sm font-bold text-white hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className={`flex-1 rounded-lg py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${isBoyTheme ? "bg-blue-600 hover:bg-blue-700" : "bg-pink-600 hover:bg-pink-700"}`}
             >
               {adminLoading ? "Oppretter…" : "Opprett standardoppgaver"}
             </button>
@@ -389,7 +400,7 @@ export default function ParentPage() {
                 setAdminLoading(true);
                 try { await resetAllData(); } finally { setAdminLoading(false); }
               }}
-              className="flex-1 rounded-lg bg-pink-600 py-2.5 text-sm font-bold text-white hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className={`flex-1 rounded-lg py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${isBoyTheme ? "bg-blue-600 hover:bg-blue-700" : "bg-pink-600 hover:bg-pink-700"}`}
             >
               {adminLoading ? "Nullstiller…" : "Nullstill alle data"}
             </button>
@@ -586,6 +597,49 @@ export default function ParentPage() {
 
         {openSections.settings && (
           <div className="mt-2 rounded-xl border border-gray-200 bg-white p-4">
+            <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-3">
+              <h3 className="text-sm font-bold text-gray-800">Barnets profil</h3>
+              <p className="mt-1 text-xs text-gray-500">
+                Sett barnets navn og velg fargetema for parent-siden.
+              </p>
+
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="child-name" className="block text-xs font-semibold text-gray-600">Barnets navn</label>
+                  <div className="mt-1 flex gap-2">
+                    <input
+                      id="child-name"
+                      type="text"
+                      value={childNameInput}
+                      onChange={(e) => setChildNameInput(e.target.value)}
+                      placeholder="Eks: Nora"
+                      className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => void setChildName(childNameInput)}
+                      className={`shrink-0 rounded-lg px-3 py-2 text-xs font-bold text-white ${isBoyTheme ? "bg-blue-500 active:bg-blue-600" : "bg-pink-500 active:bg-pink-600"}`}
+                    >
+                      Lagre
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="child-theme" className="block text-xs font-semibold text-gray-600">Fargetema</label>
+                  <select
+                    id="child-theme"
+                    value={childTheme}
+                    onChange={(e) => void setChildTheme(e.target.value === "boy" ? "boy" : "girl")}
+                    className={`mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
+                  >
+                    <option value="girl">Jente (rosa)</option>
+                    <option value="boy">Gutt (blå)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <label className="block text-sm font-bold text-gray-700">
               Ukelønn (baseAllowance)
               <div className="mt-1 flex items-center gap-2">
@@ -596,7 +650,7 @@ export default function ParentPage() {
                   step={10}
                   value={baseAllowance}
                   onChange={(e) => setBaseAllowance(Math.max(0, Number(e.target.value) || 0))}
-                  className="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-lg font-bold focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className={`w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-lg font-bold focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
                 />
                 <span className="text-sm text-gray-400">,–</span>
               </div>
@@ -619,7 +673,7 @@ export default function ParentPage() {
                   value={childPinInput}
                   onChange={(e) => setChildPinInput(e.target.value.replace(/\D/g, "").slice(0, 4))}
                   placeholder="Ny 4-sifret PIN"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm tracking-[0.3em] focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm tracking-[0.3em] focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
                 />
                 <input
                   type="password"
@@ -628,7 +682,7 @@ export default function ParentPage() {
                   value={childPinConfirm}
                   onChange={(e) => setChildPinConfirm(e.target.value.replace(/\D/g, "").slice(0, 4))}
                   placeholder="Gjenta PIN"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm tracking-[0.3em] focus:outline-none focus:ring-2 focus:ring-pink-400"
+                  className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm tracking-[0.3em] focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
                 />
               </div>
 
@@ -644,7 +698,7 @@ export default function ParentPage() {
                   type="button"
                   disabled={childPinBusy}
                   onClick={() => void handleSaveChildPin()}
-                  className="rounded-lg bg-pink-500 px-4 py-2 text-sm font-bold text-white active:bg-pink-600 disabled:opacity-50"
+                  className={`rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-50 ${isBoyTheme ? "bg-blue-500 active:bg-blue-600" : "bg-pink-500 active:bg-pink-600"}`}
                 >
                   {childPinConfigured ? "Endre PIN" : "Lagre PIN"}
                 </button>

@@ -183,7 +183,7 @@ Expected output after deployment:
 
 Run these steps on production:
 
-1. Open [https://stianwetterstad.github.io/ukelonn/debug](https://stianwetterstad.github.io/ukelonn/debug)
+1. Open `https://<your-domain>/<basePath>/debug` (or local `/debug` route)
 2. Accept notifications when prompted
 3. Copy the FCM token from the debug page (or browser console)
 4. Send a test message in Firebase Console (Cloud Messaging)
@@ -202,7 +202,7 @@ After each GitHub Pages deployment (push to `main` or manual trigger):
 
 1. **Wait for deployment to complete** (check Actions tab for workflow status)
 
-2. **Open the debug page** → https://stian.github.io/ukelonn/debug
+2. **Open the debug page** → `https://<your-domain>/<basePath>/debug`
    - Verify all indicators are green (✅)
    - Note any issues
 
@@ -229,7 +229,7 @@ A live debug page is available at `/debug` on all environments (local dev, stagi
 
 Access it at:
 - **Local**: http://localhost:3000/ukelonn/debug
-- **Production**: https://stian.github.io/ukelonn/debug
+- **Production**: `https://<your-domain>/<basePath>/debug`
 
 The debug page shows:
 - ✅ HTTPS/security status
@@ -244,9 +244,9 @@ Use this page alongside the console tests above for a comprehensive verification
 
 ### VAPID Key
 
-Located in `src/lib/fcm.ts`:
+Configured via env/runtime (`NEXT_PUBLIC_FCM_VAPID_KEY` or startside runtime-konfig):
 ```typescript
-const FCM_VAPID_KEY = "BOIiLlVL5_Gfyu8Vxc82z3aE8zKDRfB_c8WcVvYPCsXz5o2I8kGvFYbxP0FnLT6V-M9FBPbLLN4r7eHPqGqYoNw";
+NEXT_PUBLIC_FCM_VAPID_KEY=...
 ```
 
 To regenerate:
@@ -324,7 +324,7 @@ See `firebase.json` for hosting/functions configuration.
 
 ## Links
 
-- [Firebase Console](https://console.firebase.google.com/project/ukelonn-1cdbf)
+- [Firebase Console](https://console.firebase.google.com/)
 - [Cloud Messaging Docs](https://firebase.google.com/docs/cloud-messaging)
 - [Cloud Functions Docs](https://firebase.google.com/docs/functions)
 - [FCM Best Practices](https://firebase.google.com/docs/cloud-messaging/concept-options)

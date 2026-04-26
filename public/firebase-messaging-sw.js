@@ -4,14 +4,19 @@ import {
   onBackgroundMessage,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging-sw.js";
 
-const firebaseConfig = {
-  apiKey: "REDACTED_FIREBASE_API_KEY",
-  authDomain: "ukelonn-1cdbf.firebaseapp.com",
-  projectId: "ukelonn-1cdbf",
-  storageBucket: "ukelonn-1cdbf.firebasestorage.app",
-  messagingSenderId: "775837524786",
-  appId: "1:775837524786:web:04b4550b222c815c1bad2b",
-};
+async function loadFirebaseConfig() {
+  try {
+    const configUrl = new URL("./firebase-config.json", self.location.href);
+    const response = await fetch(configUrl.toString(), { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Could not load ${configUrl}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("[FCM SW] Failed to load firebase-config.json", error);
+    return null;
+  }
+}
 
 console.log("[FCM SW] module service worker loaded at", self.location.pathname);
 
@@ -21,8 +26,8 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+const firebaseConfig = await loadFirebaseConfig();
+const messaging = firebaseConfig ? getMessaging(initializeApp(firebaseConfig)) : null;
 
 function resolveNotificationLink(data) {
   const rawLink = typeof data?.link === "string" ? data.link : null;
@@ -37,20 +42,22 @@ function resolveNotificationLink(data) {
   return rawLink.startsWith("/") ? rawLink : `/ukelonn/${rawLink}`;
 }
 
-onBackgroundMessage(messaging, (payload) => {
-  console.log("[FCM SW] Background message received:", payload);
+if (messaging) {
+  onBackgroundMessage(messaging, (payload) => {
+    console.log("[FCM SW] Background message received:", payload);
 
-  const title = payload.notification?.title ?? "Ukelonn";
-  const body = payload.notification?.body ?? "";
-  const icon = payload.notification?.icon ?? "/ukelonn/icon-192.png";
+    const title = payload.notification?.title ?? "Ukelonn";
+    const body = payload.notification?.body ?? "";
+    const icon = payload.notification?.icon ?? "/ukelonn/icon-192.png";
 
-  self.registration.showNotification(title, {
-    body,
-    icon,
-    badge: "/ukelonn/icon-192.png",
-    data: payload.data ?? {},
+    self.registration.showNotification(title, {
+      body,
+      icon,
+      badge: "/ukelonn/icon-192.png",
+      data: payload.data ?? {},
+    });
   });
-});
+}
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();

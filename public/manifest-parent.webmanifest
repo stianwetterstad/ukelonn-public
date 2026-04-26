@@ -1,7 +1,7 @@
 {
-  "name": "Alma Ukelonn Parent",
+  "name": "Ukelonn Parent",
   "short_name": "Ukelonn Parent",
-  "description": "Installable parent view for Alma's allowance tracker.",
+  "description": "Installable parent view for family allowance tracking.",
   "start_url": "/ukelonn/parent/",
   "scope": "/ukelonn/",
   "display": "standalone",
