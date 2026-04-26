@@ -1,7 +1,7 @@
 {
-  "name": "Alma Ukelonn Child",
+  "name": "Ukelonn Child",
   "short_name": "Ukelonn Child",
-  "description": "Installable child view for Alma's allowance tracker.",
+  "description": "Installable child view for family allowance tracking.",
   "start_url": "/ukelonn/child/",
   "scope": "/ukelonn/",
   "display": "standalone",

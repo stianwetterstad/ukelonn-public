@@ -45,6 +45,8 @@ export default function ChildPage() {
     childToggle,
     balance,
     savingsGoal,
+    childName,
+    childTheme,
     setBalance,
     setSavingsGoal,
     childPinConfigured,
@@ -58,6 +60,8 @@ export default function ChildPage() {
   const [pinBusy, setPinBusy] = useState(false);
   const [unlockedThisSession, setUnlockedThisSession] = useState(false);
   const goals = useMemo(() => parseSavingsGoal(savingsGoal), [savingsGoal]);
+  const displayChildName = childName.trim() || "Barnet";
+  const isBoyTheme = childTheme === "boy";
 
   const doneCount = dayGroups
     .flatMap((d) => d.tasks)
@@ -139,9 +143,9 @@ export default function ChildPage() {
 
   if (!childPinConfigured) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-pink-50 px-4">
+      <main className={`flex min-h-screen items-center justify-center px-4 ${isBoyTheme ? "bg-blue-50" : "bg-pink-50"}`}>
         <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg text-center">
-          <h1 className="text-xl font-bold text-pink-700">Pinkode mangler</h1>
+          <h1 className={`text-xl font-bold ${isBoyTheme ? "text-blue-700" : "text-pink-700"}`}>Pinkode mangler</h1>
           <p className="mt-3 text-sm text-gray-600">
             Be mamma eller pappa sette en ny pinkode.
           </p>
@@ -152,12 +156,12 @@ export default function ChildPage() {
 
   if (!isChildUnlocked) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-pink-50 px-4">
+      <main className={`flex min-h-screen items-center justify-center px-4 ${isBoyTheme ? "bg-blue-50" : "bg-pink-50"}`}>
         <form
           onSubmit={(e) => void handleUnlockSubmit(e)}
           className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg"
         >
-          <h1 className="text-center text-xl font-bold text-pink-700">Lås opp barnesiden</h1>
+          <h1 className={`text-center text-xl font-bold ${isBoyTheme ? "text-blue-700" : "text-pink-700"}`}>Lås opp barnesiden</h1>
           <p className="mt-2 text-center text-sm text-gray-500">Skriv inn 4-sifret PIN for å fortsette.</p>
 
           <label htmlFor="pin-input" className="mt-4 block text-xs font-semibold text-gray-600">
@@ -172,7 +176,7 @@ export default function ChildPage() {
             value={pinInput}
             onChange={(e) => setPinInput(e.target.value.replace(/\D/g, "").slice(0, 4))}
             placeholder="••••"
-            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-center text-xl tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className={`mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-center text-xl tracking-[0.5em] focus:outline-none focus:ring-2 ${isBoyTheme ? "focus:ring-blue-400" : "focus:ring-pink-400"}`}
           />
 
           {pinError && (
@@ -182,16 +186,16 @@ export default function ChildPage() {
           <button
             type="submit"
             disabled={pinBusy}
-            className="mt-4 w-full rounded-lg bg-pink-500 py-2.5 text-sm font-bold text-white active:bg-pink-600 disabled:opacity-50"
+            className={`mt-4 w-full rounded-lg py-2.5 text-sm font-bold text-white disabled:opacity-50 ${isBoyTheme ? "bg-blue-500 active:bg-blue-600" : "bg-pink-500 active:bg-pink-600"}`}
           >
             {pinBusy ? "Sjekker…" : "Lås opp"}
           </button>
 
           <a
-            href="https://alma.rocks"
+            href="/"
             className="mt-4 block text-center text-xs text-gray-400 hover:text-gray-600"
           >
-            ← Tilbake til Alma
+            ← Til startsiden
           </a>
         </form>
       </main>
@@ -201,15 +205,15 @@ export default function ChildPage() {
   return (
     <main className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col px-4 py-6 md:px-8 md:py-8">
       {/* ─── Top banner ─── */}
-      <header className="relative rounded-t-2xl bg-pink-400 px-6 py-4 text-center md:py-5">
+      <header className={`relative rounded-t-2xl px-6 py-4 text-center md:py-5 ${isBoyTheme ? "bg-blue-400" : "bg-pink-400"}`}>
         <a
-          href="https://alma.rocks"
+          href="/"
           className="absolute left-3 top-3 flex items-center gap-0.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold text-white hover:bg-white/30"
         >
-          ← Alma
+          ← Start
         </a>
         <h1 className="text-2xl font-extrabold uppercase tracking-wide text-white md:text-3xl">
-          Almas ukelønn ✅
+          {displayChildName} sin ukelønn ✅
         </h1>
         <p className="mt-1 text-sm text-pink-100 md:text-base">
           Gjør alle oppgavene → <span className="font-bold text-white">kr {baseAllowance},–</span> + opptil <span className="font-bold text-white">kr {maxBonus},–</span> i bonus!

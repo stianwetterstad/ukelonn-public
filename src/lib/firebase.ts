@@ -2,16 +2,16 @@ import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, isSupported, type Messaging } from "firebase/messaging";
-import { firebaseConfig } from "@/lib/firebaseConfig";
+import { getFirebaseClientConfig } from "@/lib/firebaseConfig";
 
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const app = getApps().length > 0 ? getApp() : initializeApp(getFirebaseClientConfig());
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const DEBUG_FIREBASE = process.env.NEXT_PUBLIC_DEBUG === "true";
 
 if (DEBUG_FIREBASE) {
-  console.log("[FB] projectId/appId", firebaseConfig.projectId, firebaseConfig.appId);
+  console.log("[FB] projectId/appId", app.options.projectId, app.options.appId);
   console.log("[FB] getApps().length", getApps().length);
 }
 

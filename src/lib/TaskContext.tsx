@@ -61,6 +61,8 @@ type TaskStore = {
   baseAllowance: number;
   balance: number;
   savingsGoal: string;
+  childName: string;
+  childTheme: "girl" | "boy";
   childPinConfigured: boolean;
   settingsLoaded: boolean;
 
@@ -85,6 +87,8 @@ type TaskStore = {
   setBaseAllowance: (value: number) => void;
   setBalance: (value: number) => Promise<void>;
   setSavingsGoal: (value: string) => Promise<void>;
+  setChildName: (value: string) => Promise<void>;
+  setChildTheme: (value: "girl" | "boy") => Promise<void>;
   setChildPin: (pin: string) => Promise<void>;
   clearChildPin: () => Promise<void>;
   verifyChildPin: (pin: string) => Promise<boolean>;
@@ -111,6 +115,8 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const [baseAllowance, setBaseAllowanceLocal] = useState(INITIAL_BASE_ALLOWANCE);
   const [balance, setBalanceLocal] = useState(0);
   const [savingsGoal, setSavingsGoalLocal] = useState("");
+  const [childName, setChildNameLocal] = useState("");
+  const [childTheme, setChildThemeLocal] = useState<"girl" | "boy">("girl");
   const [childPinHash, setChildPinHash] = useState<string | null>(null);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
 
@@ -150,10 +156,14 @@ export function TaskProvider({ children }: { children: ReactNode }) {
           }
           setBalanceLocal(typeof data.balance === "number" ? data.balance : 0);
           setSavingsGoalLocal(typeof data.savingsGoal === "string" ? data.savingsGoal : "");
+          setChildNameLocal(typeof data.childName === "string" ? data.childName : "");
+          setChildThemeLocal(data.childTheme === "boy" ? "boy" : "girl");
           setChildPinHash(typeof data.childPinHash === "string" ? data.childPinHash : null);
         } else {
           setBalanceLocal(0);
           setSavingsGoalLocal("");
+          setChildNameLocal("");
+          setChildThemeLocal("girl");
           setChildPinHash(null);
         }
         setSettingsLoaded(true);
@@ -212,6 +222,18 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const setSavingsGoal = useCallback(async (value: string) => {
     setSavingsGoalLocal(value);
     await setDoc(settingsDocRef(), { savingsGoal: value }, { merge: true });
+  }, []);
+
+  const setChildName = useCallback(async (value: string) => {
+    const normalized = value.trim();
+    setChildNameLocal(normalized);
+    await setDoc(settingsDocRef(), { childName: normalized }, { merge: true });
+  }, []);
+
+  const setChildTheme = useCallback(async (value: "girl" | "boy") => {
+    const normalized = value === "boy" ? "boy" : "girl";
+    setChildThemeLocal(normalized);
+    await setDoc(settingsDocRef(), { childTheme: normalized }, { merge: true });
   }, []);
 
   const setChildPin = useCallback(async (pin: string) => {
@@ -348,6 +370,8 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       baseAllowance,
       balance,
       savingsGoal,
+      childName,
+      childTheme,
       childPinConfigured: childPinHash !== null,
       settingsLoaded,
       weeklyTasks,
@@ -366,6 +390,8 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       setBaseAllowance,
       setBalance,
       setSavingsGoal,
+      setChildName,
+      setChildTheme,
       setChildPin,
       clearChildPin,
       verifyChildPin,
@@ -377,7 +403,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       seedInitialTasks,
       resetAllData,
     };
-  }, [tasks, baseAllowance, balance, savingsGoal, settingsLoaded, childPinHash, childToggle, setApproval, approveAllPending, setBaseAllowance, setBalance, setSavingsGoal, setChildPin, clearChildPin, verifyChildPin, addTask, editTask, deleteTask, upsertStandardTask, removeStandardTask, seedInitialTasks, resetAllData]);
+  }, [tasks, baseAllowance, balance, savingsGoal, childName, childTheme, settingsLoaded, childPinHash, childToggle, setApproval, approveAllPending, setBaseAllowance, setBalance, setSavingsGoal, setChildName, setChildTheme, setChildPin, clearChildPin, verifyChildPin, addTask, editTask, deleteTask, upsertStandardTask, removeStandardTask, seedInitialTasks, resetAllData]);
 
   return <TaskContext.Provider value={store}>{children}</TaskContext.Provider>;
 }

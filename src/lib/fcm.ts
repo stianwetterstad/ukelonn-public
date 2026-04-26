@@ -5,6 +5,7 @@ import { getToken, isSupported, onMessage, type MessagePayload, type Messaging }
 import { db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getApps } from "firebase/app";
+import { getFirebaseVapidKey } from "@/lib/firebaseConfig";
 
 const FAMILY_ID = "family-default";
 const LAST_FCM_TOKEN_KEY = "fcm_token";
@@ -244,7 +245,7 @@ export async function initializeFCM(role: DeviceRole = "parent"): Promise<string
     return null;
   }
 
-  const fcmVapidKey = process.env.NEXT_PUBLIC_FCM_VAPID_KEY;
+  const fcmVapidKey = getFirebaseVapidKey();
   if (debugFirebase) {
     console.log("[FCM] NEXT_PUBLIC_FCM_VAPID_KEY present:", !!fcmVapidKey);
   }
