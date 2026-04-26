@@ -94,3 +94,32 @@ Se `functions/README.md` for detaljer om triggere og varsler.
 ## Push-varsler
 
 Se `PUSH_NOTIFICATIONS.md` for test- og feilsøkingsflyt.
+
+---
+
+## How to Contribute
+
+Contributions are welcome! The short version:
+
+1. **Fork** this repository.
+2. Create a feature branch: `git checkout -b feat/my-feature`
+3. Make your changes, then run `npm run lint && npm run build`.
+4. Push your branch and open a **Pull Request** against `master`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full details including coding standards and commit conventions.
+
+## Coding Standards
+
+- TypeScript — keep types explicit where it aids readability.
+- ESLint + `eslint-config-next` ruleset (`npm run lint`).
+- Tailwind CSS utility classes for styling.
+- No secrets or Firebase keys committed — use `.env.local` or runtime config.
+
+## Security
+
+To report a vulnerability, please use [GitHub's private security advisory feature](../../security/advisories/new) instead of a public issue. See [SECURITY.md](SECURITY.md) for full details.
+
+## Discussions
+
+Have a question or idea? Use [GitHub Discussions](../../discussions) rather than opening an issue.
+> **Note for maintainer:** Enable Discussions in **Settings → General → Features → Discussions** if not already active.
