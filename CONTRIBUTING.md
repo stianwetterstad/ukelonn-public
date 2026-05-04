@@ -83,6 +83,18 @@ Then go to GitHub and click **New pull request**.
 - **Formatting**: Keep code style consistent with the surrounding file.
 - No secrets or Firebase API keys should ever be committed — use `.env.local` or runtime config.
 
+## Never Commit Secrets
+
+**Never** add API keys, passwords, tokens, or any credentials to any file that will be committed to the repository.
+
+- Firebase / Google API keys belong in `.env.local` (git-ignored).
+- Use `.env.local.example` as the template — it contains only placeholder values.
+- If you accidentally commit a secret, treat it as **compromised immediately**:
+  1. Rotate/revoke the key in the relevant service (Google Cloud Console, Firebase, etc.).
+  2. Remove it from the commit history using `git filter-repo` or BFG Repo-Cleaner.
+  3. Force-push the cleaned history (coordinate with maintainers first).
+  4. Open a security advisory via GitHub's private security advisory feature.
+
 ## Reporting Bugs and Requesting Features
 
 Use [GitHub Issues](../../issues) and select the appropriate template (Bug Report or Feature Request).
